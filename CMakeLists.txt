@@ -8,6 +8,7 @@ endif()
 
 option(BUILD_SHARED_LIBS "Build shared instead of static library" OFF)
 option(BUILD_SAMPLES "Build provided samples" OFF)
+option(DUCKX_INSTALL "Install applications and library" OFF)
 
 # Fix issues when building with clang 12, next version of clang
 # else we might encounter errors making the library 
@@ -59,16 +60,17 @@ if (BUILD_SAMPLES)
 endif()
 
 include(GNUInstallDirs)
-install(
-    TARGETS duckx
-    EXPORT duckxConfig
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}${INSTALL_SUFFIX}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}${INSTALL_SUFFIX}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    )
-install(EXPORT duckxConfig NAMESPACE duckx:: DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/duckx)
-install(FILES ${HEADERS} ${THIRD_PARTY_HEADERS} DESTINATION include/duckx)
-
+if(DUCKX_INSTALL)
+	install(
+		TARGETS duckx
+		EXPORT duckxConfig
+		ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}${INSTALL_SUFFIX}
+		LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}${INSTALL_SUFFIX}
+		RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+		)
+	install(EXPORT duckxConfig NAMESPACE duckx:: DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/duckx)
+	install(FILES ${HEADERS} ${THIRD_PARTY_HEADERS} DESTINATION include/duckx)
+endif()
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
 	enable_testing()
